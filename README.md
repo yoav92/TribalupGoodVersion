@@ -1,5 +1,4 @@
-# TribalupGoodVersionhjh
-jlhhihihi
-jjkbjkbce
-je pense que non
+# TribalupGoodFinalVersion
+
+Created by Anthony Pisano and Yoav cohen
 
