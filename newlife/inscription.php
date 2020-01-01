@@ -4,19 +4,25 @@ require_once 'php/functions.php';
 require_once 'php/db.php';
 
 
-if(!empty($_POST)){     // check if the form is filled in
+if(isset($_POST['formins']))     // check if the form is filled in
+{
 	$errors = array();
-
+	
 
 	if(empty($_POST['username'])){ //check the name
 
-		$errors['username'] = "Your name is invalid";
+		$errors[] = "Your last name is invalid";
+
+	} 
+	if(empty($_POST['userprenom'])){ //check the name
+
+		$errors[] = "Your first name is invalid";
 
 	} 
 
 	if(empty($_POST['email'])){ //check the email
 
-		$errors['username'] = "Your email is invalid";
+		$errors[] = "Your email is invalid";
 
 	} else {
 
@@ -28,14 +34,14 @@ if(!empty($_POST)){     // check if the form is filled in
 
 		if($user){
 
-			$errors['email']= 'This email is already used for another account';
+			$errors[]= 'This email is already used for another account';
 		}
 	}
 
 
 	if(empty($_POST['password'])){ //check the password
 
-		$errors['username'] = "Your password is invalid";
+		$errors[] = "Your password is invalid";
 
 	}
 
@@ -49,6 +55,7 @@ if(!empty($_POST)){     // check if the form is filled in
 
 
 	}
+
 }
 
 ?>
@@ -57,43 +64,23 @@ if(!empty($_POST)){     // check if the form is filled in
   <head>
     <meta charset="UTF-8">
     <title>Sign in to TribalUp</title>
+	
     <link rel="stylesheet"  href="design/css/design.css">
     <link rel="stylesheet" href="design/css/bootstrap.min.css">
-    <link rel="stylesheet" href="design/css/bootstrap-theme.min.css" >
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-	<script src="js/bootstrap.min.js" ></script>
-	<script type="text/javascript" language="Javascript" src="js/jquery-3.2.1.js"></script>
-	<script type="text/javascript" language="Javascript" src="js/func.js"></script>
+   
+	
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+	
 	<script type="text/javascript">
 	$(document).ready(function(){ //code jquery to guide the user to complete the form
 	
     var $nom = $('#nom'),
-        $password = $('#password'),
         $mail = $('#mail'),
         $envoi = $('#envoi'),
         $erreur = $('#erreur'),
         $champ = $('.champ');
         $champe = $('.champe');
 
-    $champ.keyup(function(){ 
-        if($(this).val().length < 6){ // if the string is less than 6
-        	$("#password").next(".error-message").show().text("Your password must contain at least 6 characters");
-            $(this).css({ // we make the red field
-                borderColor : 'red',
-	        color : 'red'
-            });
-            
-         }
-         else{
-         	$("#password").next(".error-message").hide().text("");
-             $(this).css({ // if everything is good, we make it green
-	         borderColor : 'green',
-	         color : 'green'
-	     });
-             
-         }
-         
-    });
 
 
      $champe.keyup(function(){
@@ -165,27 +152,123 @@ if(!empty($_POST)){     // check if the form is filled in
 					
 				});
 
-     
 
-    $envoi.click(function(e){
-    	if($champe.val().length < 2){
-    		e.preventDefault();
-    	}
-    	else if(!$("#mail").val().match(/^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/)){
-    		e.preventDefault();
-    	}
-    	else if($("#nom").val() == "" ){
-    		e.preventDefault();
-    	}
-    	else if($("#metier").val() == "" ){
-    		e.preventDefault();
-    	}
-	
-});
+	//////////////////////////////////////////
+
+		
+	var result="";
+
+	$('#password').keyup(function(){
+
+		var password = $(this).val();
+		password=$.trim(password);
+		var lettre_min = /[a-z]/;
+		var lettre_maj = /[A-Z]/;
+		var nombre = /[0-9]/;
+
+			if(password.length != 0)
+			{
+				$('.error').hide();
+
+				//password faible
+					if((password.match(lettre_min)) && password.length < 5)
+					{
+						$('.bar').animate({width:'10%'},200).show();
+						$('.bar').css('background-color','red').show();
+						$('.bar').text('Faible').show();
+						$('.pass').css("border-color","red");
+						result="faible";
+					}
+					else if((password.match(lettre_maj)) && password.length < 5)
+					{
+						$('.bar').animate({width:'10%'},200).show();
+						$('.bar').css('background-color','red').show();
+						$('.bar').text('Faible').show();
+						$('.pass').css("border-color","red");
+						result="faible";
+					}
+					else if((password.match(nombre)) && password.length < 5)
+					{
+						$('.bar').animate({width:'10%'},200).show();
+						$('.bar').css('background-color','red').show();
+						$('.bar').text('Faible').show();
+						$('.pass').css("border-color","red");
+						result="faible";
+					}
+				//password moyen
+					else if((password.match(lettre_min)) && (password.match(lettre_maj)) && password.length >= 6 && password.length<=8)
+					{
+						$('.bar').animate({width:'15%'},200).show();
+						$('.bar').css('background-color','orange').show();
+						$('.bar').text('Moyen').show();
+						$('.pass').css("border-color","orange");
+						result="moyen";
+					}
+					else if((password.match(nombre)) && (password.match(lettre_maj)) && password.length >= 6 && password.length<=8)
+					{
+						$('.bar').animate({width:'15%'},200).show();
+						$('.bar').css('background-color','orange').show();
+						$('.bar').text('Moyen').show();
+						$('.pass').css("border-color","orange");
+						result="moyen";
+					}
+					else if((password.match(lettre_min)) && (password.match(nombre)) && password.length >= 6 && password.length<=8)
+					{
+						$('.bar').animate({width:'15%'},200).show();
+						$('.bar').css('background-color','orange').show();
+						$('.bar').text('Moyen').show();
+						$('.pass').css("border-color","orange");
+						result="moyen";
+					}
+					else if( password.length >=10)
+					{
+						$('.bar').animate({width:'15%'},200).show();
+						$('.bar').css('background-color','orange').show();
+						$('.bar').text('Moyen').show();
+						$('.pass').css("border-color","orange");
+						result="moyen";
+					}else if((password.match(lettre_min)) && (password.match(nombre)) && (password.match(lettre_maj)) && password.length >= 5 && password.length<=7)
+					{
+						$('.bar').animate({width:'20%'},200).show();
+						$('.bar').css('background-color','orange').show();
+						$('.bar').text('moyen').show();
+						$('.pass').css("border-color","orange");
+						result="moyen";
+					}
+				//password fort
+					else if((password.match(lettre_min)) && (password.match(nombre)) && (password.match(lettre_maj)) && password.length > 7)
+					{
+						$('.bar').animate({width:'20%'},200).show();
+						$('.bar').css('background-color','green').show();
+						$('.bar').text('Fort').show();
+						$('.pass').css("border-color","green");
+						result="fort";
+					}
+					else if(password.length >= 12)
+					{
+						$('.bar').animate({width:'20%'},200).show();
+						$('.bar').css('background-color','green').show();
+						$('.bar').text('Fort').show();
+						$('.pass').css("border-color","green");
+						result="fort";
+					}
+
+			}
+			else
+			{
+				$('.bar').hide();
+				$('.error').fadeIn().text("Please enter your password");
+				$('.pass').css("border-color","#FF0000");
+				result="vide";
+			}
+
+	});
 
 
 });
 </script>
+	
+	
   </head>
   <body >
 
@@ -243,22 +326,11 @@ if(!empty($_POST)){     // check if the form is filled in
 		</div>
 		
 
-		<div class="text-center autreee"><button type="submit" id="envoi" class="btn btn-secondary btn-lg">Sign up</button></div>
+		<div class="text-center autreee"><button type="submit" id="" class="btn btn-secondary btn-lg" name="formins">Sign up</button></div>
 	</div>
 </form>
 
-<!--<footer class="footer">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-  
-    <div class=""><img src="design/icone/logo_tribalup" WIDTH=90 HEIGHT=80 /></div>
-    
- 
 
-    
-    
-</nav>
-
-</footer>-->
   </body>
 
 </html>

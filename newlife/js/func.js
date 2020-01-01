@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+	
 	var result="";
 
 	$('#password').keyup(function(){
@@ -107,18 +109,5 @@ $(document).ready(function(){
 
 	});
 
-		$('form').submit(function(){
-			if(result=="faible")
-			{
-				return false;
-			}
-			else if(result=="moyen" || result=="fort")
-			{
-				return true;
-			}
-			else{
-				return false;
-			}
-		});
 
 });

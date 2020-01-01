@@ -1,4 +1,4 @@
-# TribalupGoodFinalVersion
+# TribalupFinalVersion
 
-Created by Anthony Pisano and Yoav cohen
+Created by Yoav cohen
 

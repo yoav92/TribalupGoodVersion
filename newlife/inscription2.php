@@ -8,27 +8,20 @@ if(!empty($_POST)){
   $errors = array();
 
 
-  if(empty($_POST['username'])){
+  if(empty($_POST['username'])){ //check the name
 
-    $errors['username'] = "Votre nom n'est pas valide";
+		$errors[] = "Your last name is invalid";
 
-  } else {
+	} 
+	if(empty($_POST['userprenom'])){ 
 
-    $req = $pdo->prepare('SELECT id FROM members WHERE username = ?');
+		$errors[] = "Your first name is invalid";
 
-    $req->execute([$_POST['username']]);
-
-    $user = $req->fetch();
-
-    /*if($user){
-
-      $errors['username']= 'Ce nom est deja pris';
-    }*/
-  }
+	} 
 
   if(empty($_POST['email'])){
 
-    $errors['username'] = "Your email is invalid";
+    $errors[] = "Your email is invalid";
 
   } else {
 
@@ -40,14 +33,20 @@ if(!empty($_POST)){
 
     if($user){
 
-      $errors['email']= 'This email is already used for another account';
+      $errors[]= 'This email is already used for another account';
     }
   }
 
 
   if(empty($_POST['password'])){
 
-    $errors['username'] = "Your password is invalid";
+    $errors[] = "Your password is invalid";
+
+  }
+
+  if($_POST['situation']=='What is your current situation?' ){
+
+    $errors[] = "Choose one situation";
 
   }
 
@@ -79,14 +78,12 @@ if(!empty($_POST)){
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <script src="js/bootstrap.min.js" ></script>
   <script type="text/javascript" language="Javascript" src="js/jquery-3.2.1.js"></script>
-  <script type="text/javascript" language="Javascript" src="js/func.js"></script>
   <script type="text/javascript">
   $(document).ready(function(){
   
     var $nom = $('#nom'),
         $mdp = $('#mdp'),
         $mail = $('#mail'),
-        $envoi = $('#envoi'),
         $erreur = $('#erreur'),
         $champ = $('.champ');
         $champe = $('.champe');
@@ -182,21 +179,120 @@ $("#metier").keyup(function(){
 
      
 
-    $envoi.click(function(e){
-      if($champe.val().length < 2){
-        e.preventDefault();
-      }
-      else if(!$("#mail").val().match(/^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/)){
-        e.preventDefault();
-      }
-      else if($("#nom").val() == "" ){
-        e.preventDefault();
-      }
-      else if($("#metier").val() == "" ){
-        e.preventDefault();
-      }
-  
+   //////////////////////////////////
+
+   var result="";
+
+$('#password').keyup(function(){
+
+  var password = $(this).val();
+  password=$.trim(password);
+  var lettre_min = /[a-z]/;
+  var lettre_maj = /[A-Z]/;
+  var nombre = /[0-9]/;
+
+    if(password.length != 0)
+    {
+      $('.error').hide();
+
+      //password faible
+        if((password.match(lettre_min)) && password.length < 5)
+        {
+          $('.bar').animate({width:'10%'},200).show();
+          $('.bar').css('background-color','red').show();
+          $('.bar').text('Faible').show();
+          $('.pass').css("border-color","red");
+          result="faible";
+        }
+        else if((password.match(lettre_maj)) && password.length < 5)
+        {
+          $('.bar').animate({width:'10%'},200).show();
+          $('.bar').css('background-color','red').show();
+          $('.bar').text('Faible').show();
+          $('.pass').css("border-color","red");
+          result="faible";
+        }
+        else if((password.match(nombre)) && password.length < 5)
+        {
+          $('.bar').animate({width:'10%'},200).show();
+          $('.bar').css('background-color','red').show();
+          $('.bar').text('Faible').show();
+          $('.pass').css("border-color","red");
+          result="faible";
+        }
+      //password moyen
+        else if((password.match(lettre_min)) && (password.match(lettre_maj)) && password.length >= 6 && password.length<=8)
+        {
+          $('.bar').animate({width:'15%'},200).show();
+          $('.bar').css('background-color','orange').show();
+          $('.bar').text('Moyen').show();
+          $('.pass').css("border-color","orange");
+          result="moyen";
+        }
+        else if((password.match(nombre)) && (password.match(lettre_maj)) && password.length >= 6 && password.length<=8)
+        {
+          $('.bar').animate({width:'15%'},200).show();
+          $('.bar').css('background-color','orange').show();
+          $('.bar').text('Moyen').show();
+          $('.pass').css("border-color","orange");
+          result="moyen";
+        }
+        else if((password.match(lettre_min)) && (password.match(nombre)) && password.length >= 6 && password.length<=8)
+        {
+          $('.bar').animate({width:'15%'},200).show();
+          $('.bar').css('background-color','orange').show();
+          $('.bar').text('Moyen').show();
+          $('.pass').css("border-color","orange");
+          result="moyen";
+        }
+        else if( password.length >=10)
+        {
+          $('.bar').animate({width:'15%'},200).show();
+          $('.bar').css('background-color','orange').show();
+          $('.bar').text('Moyen').show();
+          $('.pass').css("border-color","orange");
+          result="moyen";
+        }else if((password.match(lettre_min)) && (password.match(nombre)) && (password.match(lettre_maj)) && password.length >= 5 && password.length<=7)
+        {
+          $('.bar').animate({width:'20%'},200).show();
+          $('.bar').css('background-color','orange').show();
+          $('.bar').text('moyen').show();
+          $('.pass').css("border-color","orange");
+          result="moyen";
+        }
+      //password fort
+        else if((password.match(lettre_min)) && (password.match(nombre)) && (password.match(lettre_maj)) && password.length > 7)
+        {
+          $('.bar').animate({width:'20%'},200).show();
+          $('.bar').css('background-color','green').show();
+          $('.bar').text('Fort').show();
+          $('.pass').css("border-color","green");
+          result="fort";
+        }
+        else if(password.length >= 12)
+        {
+          $('.bar').animate({width:'20%'},200).show();
+          $('.bar').css('background-color','green').show();
+          $('.bar').text('Fort').show();
+          $('.pass').css("border-color","green");
+          result="fort";
+        }
+
+    }
+    else
+    {
+      $('.bar').hide();
+      $('.error').fadeIn().text("Please enter your password");
+      $('.pass').css("border-color","#FF0000");
+      result="vide";
+    }
+
 });
+
+
+
+
+
 
 
 });
@@ -272,25 +368,12 @@ $("#metier").keyup(function(){
     	<div class="col-3"></div>
     </div>
 
-    <div class="text-center autreee"><button type="submit" id="envoi" class="btn btn-secondary btn-lg">Sign up</button></div>
+    <div class="text-center autreee"><button type="submit" name="formins" class="btn btn-secondary btn-lg">Sign up</button></div>
   </div>
 </forn>
 
 
-<!--<footer class="footer">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
-  
-    <div class=""><img src="design/icone/logo_tribalup" WIDTH=90 HEIGHT=80 /></div>
-    
- 
- <!-- <li class="nav-item">
-   <a class="nav-link color_face" href="#"><a href="https://www.facebook.com/TribalupInc"> Follow us <img src="icone/facebook" WIDTH=30 HEIGHT=30 /></a>
-  </li>
 
-    
-    
-    
-</nav>-->
 
 </footer>
   </body>
